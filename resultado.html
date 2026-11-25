@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#070a16">
+<title>ETECH Day · Resultado</title>
+<link rel="icon" href="img/g1.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.wrap.wide{max-width:980px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
+.stat small{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--tx3)}
+.stat b{display:block;font-size:34px;font-weight:800;margin-top:4px;font-variant-numeric:tabular-nums}
+.stat .on{color:var(--ok)}.stat .off{color:var(--err)}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:6px}
+.row .btn{margin-top:8px}
+.bars{display:grid;gap:10px}
+.bar{display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:12px}
+.bar img{width:44px;height:44px;border-radius:11px}
+.bar .tr{height:12px;border-radius:8px;background:rgba(255,255,255,.06);overflow:hidden;margin-top:6px}
+.bar .tr i{display:block;height:100%;border-radius:8px;background:var(--acc);transition:width .6s}
+.bar strong{font-size:15px}
+.bar em{font-style:normal;font-family:var(--mono);font-size:14px;color:var(--tx2);font-variant-numeric:tabular-nums}
+/* projeção */
+#show{position:fixed;inset:0;z-index:10;background:var(--bg);display:flex;flex-direction:column;align-items:center;padding:3vh 4vw;overflow:hidden;cursor:pointer;user-select:none}
+#show:before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(60% 45% at 0% 0%,rgba(190,40,60,.3),transparent 60%),radial-gradient(70% 55% at 100% 0%,rgba(124,58,237,.5),transparent 65%),radial-gradient(70% 50% at 50% 110%,rgba(14,116,144,.3),transparent 70%)}
+.sh-top{width:100%;display:flex;justify-content:space-between;align-items:center}
+.sh-logo{font-weight:800;font-size:min(9vw,13vh);letter-spacing:-.045em;line-height:1;margin-top:2vh}
+.sh-sub{font-family:var(--mono);letter-spacing:.4em;font-size:min(2.2vw,3vh);color:#e5e9ff;margin-top:1.2vh}
+.podium{flex:1;min-height:0;width:100%;display:grid;grid-template-columns:1fr 1.15fr 1fr;align-items:end;gap:2.4vw;margin-top:2vh;margin-bottom:4vh}
+.pos{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-height:0}
+.grp{display:flex;gap:2vw;justify-content:center;flex-wrap:nowrap}
+.grp>div{display:flex;flex-direction:column;align-items:center;gap:.8vh}
+.grp.many img{width:min(6vw,9vh)!important;height:min(6vw,9vh)!important}
+.grp.many strong{font-size:min(2vw,3.4vh)!important}
+.pos .who{display:flex;flex-direction:column;align-items:center;gap:1vh;opacity:0;transform:translateY(30px) scale(.94);transition:opacity .7s,transform .7s cubic-bezier(.2,1.4,.4,1);text-align:center;margin-bottom:2vh}
+.pos.on .who{opacity:1;transform:none}
+.pos .who img{width:min(9vw,14vh);height:min(9vw,14vh);border-radius:22%;box-shadow:0 20px 50px -15px var(--acc)}
+.pos .who strong{font-size:min(3vw,5vh);font-weight:800;letter-spacing:-.02em;line-height:1.05}
+.pos .who small{font-family:var(--mono);font-size:min(1.3vw,2.1vh);letter-spacing:.12em;color:var(--tx2);text-transform:uppercase}
+.pos .who .pct{font-family:var(--mono);font-size:min(1.6vw,2.6vh);color:var(--tx2)}
+.pos .blk{width:100%;flex:none;border-radius:18px 18px 0 0;border:1px solid var(--line2);display:flex;align-items:flex-start;justify-content:center;padding-top:1.4vh;font-weight:800;font-size:min(5vw,8vh);color:rgba(255,255,255,.9);background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.02))}
+.p1 .blk{height:22vh;background:linear-gradient(180deg,rgba(167,139,250,.5),rgba(59,130,246,.08));border-color:rgba(196,181,253,.6)}
+.p2 .blk{height:15vh}.p3 .blk{height:10vh}
+.p1.on .blk{box-shadow:0 0 80px -10px rgba(167,139,250,.8)}
+.hint{position:absolute;bottom:1.6vh;left:0;right:0;text-align:center;font-family:var(--mono);font-size:12px;color:var(--tx3);letter-spacing:.1em}
+.x{position:absolute;top:14px;right:14px;z-index:2;font:inherit;font-size:13px;color:var(--tx2);background:rgba(255,255,255,.06);border:1px solid var(--line2);border-radius:10px;padding:8px 12px;cursor:pointer}
+#confetti{position:absolute;inset:0;pointer-events:none}
+.thanks{margin-top:auto;font-size:min(1.8vw,2.8vh);color:var(--tx2)}
+</style>
+</head>
+<body>
+<main class="wrap wide">
+  <div class="top">
+    <span class="pill"><i></i>PAINEL DO PROFESSOR</span>
+    <span class="tag">RESULTADO // 2026</span>
+  </div>
+  <h1 class="logo"><span class="grad">ETECH</span> Day</h1>
+  <div class="sub"><span>VOTO DO PÚBLICO</span></div>
+
+  <section id="login" class="card" style="margin-top:28px;max-width:420px">
+    <form id="lf">
+      <label class="field"><span>Código de acesso</span>
+        <input id="cod" autocomplete="off" autocapitalize="characters" placeholder="Código do professor" required></label>
+      <button class="btn" type="submit" style="margin-top:4px">Entrar</button>
+      <div class="msg" id="lmsg" role="alert"></div>
+    </form>
+  </section>
+
+  <section id="painel" class="hide">
+    <div class="sec">AO VIVO <em id="upd">—</em></div>
+    <div class="stats">
+      <div class="stat"><small>VOTOS / PARTICIPANTES</small><b id="total">0</b></div>
+      <div class="stat"><small>VOTAÇÃO</small><b id="st">—</b></div>
+    </div>
+    <div class="row">
+      <button class="btn" id="b-show">Projetar resultado</button>
+      <button class="btn ghost" id="b-toggle">Encerrar votação</button>
+      <button class="btn ghost" id="b-csv">Baixar participantes (CSV)</button>
+      <button class="btn ghost" id="b-bars">Mostrar contagem</button>
+    </div>
+    <p class="note" style="margin-top:10px">A contagem por equipe fica escondida para não aparecer na projeção por acidente. Dica: encerre a votação antes de projetar o resultado.</p>
+    <details class="card" style="margin-top:14px"><summary style="cursor:pointer;font-weight:700">Remover um voto (teste ou duplicado)</summary>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+        <input id="rm-email" type="email" placeholder="e-mail do voto" style="flex:1;min-width:200px;font:inherit;font-size:15px;color:var(--tx);background:rgba(5,8,20,.7);border:1px solid var(--line2);border-radius:12px;padding:11px 12px">
+        <button class="btn ghost" id="b-rm" style="width:auto;margin:0;padding:11px 16px">Remover</button>
+      </div><p class="note" id="rm-msg" style="margin-top:8px"></p>
+    </details>
+    <div id="bars-wrap" class="hide">
+      <div class="sec">CONTAGEM POR EQUIPE <em>SÓ PARA VOCÊ</em></div>
+      <div class="card bars" id="bars"></div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <img src="img/logo.webp" alt="Etec Dr. Demétrio Azevedo Júnior e Centro Paula Souza">
+    <div><b>Etec Dr. Demétrio Azevedo Júnior</b>Mostra de TCC • Itapeva/SP</div>
+  </footer>
+</main>
+
+<div id="show" class="hide" aria-live="polite">
+  <canvas id="confetti"></canvas>
+  <button class="x" id="b-x" type="button">Sair (Esc)</button>
+  <div class="sh-top"><span class="pill"><i></i>TÉCNICO EM DESENVOLVIMENTO DE SISTEMAS • 3º J</span></div>
+  <div class="sh-logo"><span class="grad" style="background:linear-gradient(90deg,#fff 0 16%,#38bdf8 16%,#60a5fa 40%,#a78bfa 75%,#c084fc 100%);-webkit-background-clip:text;background-clip:text;color:transparent">ETECH</span> Day</div>
+  <div class="sh-sub">VOTO DO PÚBLICO</div>
+  <div class="podium">
+    <div class="pos p2" id="p2"><div class="who"></div><div class="blk">2º</div></div>
+    <div class="pos p1" id="p1"><div class="who"></div><div class="blk">1º</div></div>
+    <div class="pos p3" id="p3"><div class="who"></div><div class="blk">3º</div></div>
+  </div>
+  <div class="hint" id="hint">CLIQUE OU APERTE ESPAÇO PARA REVELAR O 3º LUGAR</div>
+</div>
+
+<script src="equipes.js"></script>
+<script>
+(function(){
+  const E = window.ETECH, $ = (id) => document.getElementById(id);
+  let codigo = null, dados = null, timer = null;
+  try { codigo = sessionStorage.getItem("etech_cod"); } catch(e) {}
+
+  async function entrar(c) {
+    try {
+      await E.chamar({ acao: "login", codigo: c });
+      codigo = c; try { sessionStorage.setItem("etech_cod", c); } catch(e) {}
+      $("login").classList.add("hide"); $("painel").classList.remove("hide");
+      atualizar(); clearInterval(timer); timer = setInterval(atualizar, 8000);
+    } catch (x) {
+      const m = $("lmsg"); m.className = "msg err";
+      m.textContent = x.code === "codigo" ? "Código incorreto." : "Sem conexão com o servidor. Tente de novo.";
+    }
+  }
+  $("lf").addEventListener("submit", (e) => { e.preventDefault(); entrar($("cod").value.trim().toUpperCase()); });
+  if (codigo) entrar(codigo);
+
+  async function atualizar() {
+    try {
+      dados = await E.chamar({ acao: "resultado", codigo });
+      $("total").textContent = dados.total;
+      $("st").innerHTML = dados.aberta ? '<span class="on">Aberta</span>' : '<span class="off">Encerrada</span>';
+      $("b-toggle").textContent = dados.aberta ? "Encerrar votação" : "Reabrir votação";
+      $("upd").textContent = "ATUALIZADO " + new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+      const max = Math.max(1, ...dados.equipes.map((x) => x.votos));
+      const bars = $("bars"); bars.innerHTML = "";
+      [...dados.equipes].sort((a, b) => b.votos - a.votos).forEach((v) => {
+        const t = E.equipes.find((x) => x.id === v.equipe);
+        const d = document.createElement("div"); d.className = "bar"; d.style.setProperty("--acc", t.cor);
+        d.innerHTML = '<img alt=""><div><strong></strong><div class="tr"><i></i></div></div><em></em>';
+        d.querySelector("img").src = "img/g" + t.id + ".webp";
+        d.querySelector("strong").textContent = t.nome;
+        d.querySelector("i").style.width = (v.votos / max * 100) + "%";
+        d.querySelector("em").textContent = v.votos;
+        bars.appendChild(d);
+      });
+    } catch (x) { $("upd").textContent = "SEM CONEXÃO — TENTANDO DE NOVO"; }
+  }
+
+  $("b-bars").onclick = () => { const w = $("bars-wrap"); w.classList.toggle("hide"); $("b-bars").textContent = w.classList.contains("hide") ? "Mostrar contagem" : "Esconder contagem"; };
+  $("b-toggle").onclick = async () => {
+    if (!dados) return;
+    const novo = !dados.aberta;
+    if (!confirm(novo ? "Reabrir a votação?" : "Encerrar a votação? Ninguém mais conseguirá votar.")) return;
+    await E.chamar({ acao: "abrir", codigo, aberta: novo }).catch(() => alert("Não foi possível alterar agora."));
+    atualizar();
+  };
+  $("b-csv").onclick = async () => {
+    try {
+      const r = await E.chamar({ acao: "participantes", codigo });
+      const nomeEq = (id) => (E.equipes.find((x) => x.id === id) || {}).nome || "";
+      const esc = (v) => '"' + String(v ?? "").replace(/"/g, '""') + '"';
+      const linhas = [["Data e hora", "Nome", "Turma", "E-mail", "Voto"].map(esc).join(";")];
+      r.participantes.forEach((p) => linhas.push([new Date(p.data).toLocaleString("pt-BR"), p.nome, p.turma, p.email, nomeEq(p.equipe)].map(esc).join(";")));
+      const blob = new Blob(["﻿" + linhas.join("\r\n")], { type: "text/csv;charset=utf-8" });
+      const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "ETECH Day - participantes.csv"; a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    } catch (x) { alert("Não foi possível baixar agora."); }
+  };
+
+  $("b-rm").onclick = async () => {
+    const em = $("rm-email").value.trim().toLowerCase(); if (!em) return;
+    try { const r = await E.chamar({ acao: "remover", codigo, email: em }); $("rm-msg").textContent = r.removidos ? "Voto de " + em + " removido." : "Nenhum voto com esse e-mail."; $("rm-email").value = ""; atualizar(); }
+    catch (x) { $("rm-msg").textContent = "Não foi possível remover agora."; }
+  };
+  // ---------- projeção ----------
+  let etapa = 0, grupos = [];
+  function montarPodio() {
+    const distintos = [...new Set(dados.equipes.filter((v) => v.votos > 0).map((v) => v.votos))].sort((a, b) => b - a).slice(0, 3);
+    grupos = distintos.map((n) => dados.equipes.filter((v) => v.votos === n));
+    ["p1", "p2", "p3"].forEach((pid, i) => {
+      const el = $(pid); el.classList.remove("on");
+      const who = el.querySelector(".who"); who.innerHTML = "";
+      const g = grupos[i];
+      if (!g) { el.style.visibility = "hidden"; return; }
+      el.style.visibility = "";
+      const grp = document.createElement("div"); grp.className = "grp" + (g.length > 1 ? " many" : "");
+      g.forEach((v) => {
+        const t = E.equipes.find((x) => x.id === v.equipe);
+        const box = document.createElement("div"); box.style.setProperty("--acc", t.cor);
+        const img = document.createElement("img"); img.src = "img/g" + t.id + ".webp"; img.alt = "";
+        const s = document.createElement("small"); s.textContent = t.area;
+        const st = document.createElement("strong"); st.textContent = t.nome;
+        box.append(img, s, st); grp.appendChild(box);
+      });
+      who.appendChild(grp);
+      if (g.length > 1) { const e = document.createElement("small"); e.textContent = "empate"; who.appendChild(e); }
+    });
+    etapa = 0;
+    $("hint").textContent = grupos.length ? "CLIQUE OU APERTE ESPAÇO PARA REVELAR O " + grupos.length + "º LUGAR" : "AINDA NÃO HÁ VOTOS";
+  }
+  function avancar() {
+    const ordem = []; for (let i = grupos.length; i >= 1; i--) ordem.push(i);
+    if (etapa >= ordem.length) return;
+    const pos = ordem[etapa++]; $("p" + pos).classList.add("on");
+    if (pos === 1) { confete(); $("hint").textContent = "PARABÉNS A TODAS AS EQUIPES DA ETECH DAY!"; }
+    else $("hint").textContent = "CLIQUE PARA REVELAR O " + ordem[etapa] + "º LUGAR";
+  }
+  $("b-show").onclick = async () => {
+    await atualizar(); if (!dados) return;
+    montarPodio(); $("show").classList.remove("hide");
+    if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(() => {});
+  };
+  function sair() { $("show").classList.add("hide"); stopConf = true; if (document.fullscreenElement) document.exitFullscreen().catch(() => {}); }
+  $("b-x").onclick = (e) => { e.stopPropagation(); sair(); };
+  $("show").addEventListener("click", avancar);
+  document.addEventListener("keydown", (e) => {
+    if ($("show").classList.contains("hide")) return;
+    if (e.key === "Escape") sair();
+    if (e.key === " " || e.key === "ArrowRight" || e.key === "Enter" || e.key === "PageDown") { e.preventDefault(); avancar(); }
+  });
+
+  let stopConf = false;
+  function confete() {
+    const c = $("confetti"), x = c.getContext("2d"); c.width = innerWidth; c.height = innerHeight; stopConf = false;
+    const cores = ["#38bdf8", "#60a5fa", "#a78bfa", "#c084fc", "#f472b6", "#34d399", "#fff"];
+    const ps = Array.from({ length: 220 }, () => ({ x: Math.random() * c.width, y: -20 - Math.random() * c.height * .6, r: 4 + Math.random() * 6, vy: 2 + Math.random() * 3.5, vx: -1.5 + Math.random() * 3, a: Math.random() * 6, va: -.15 + Math.random() * .3, c: cores[(Math.random() * cores.length) | 0] }));
+    const t0 = performance.now();
+    (function loop(t) {
+      if (stopConf) { x.clearRect(0, 0, c.width, c.height); return; }
+      x.clearRect(0, 0, c.width, c.height);
+      ps.forEach((p) => { p.x += p.vx; p.y += p.vy; p.a += p.va; if (p.y > c.height + 20 && t - t0 < 6000) { p.y = -20; p.x = Math.random() * c.width; }
+        x.save(); x.translate(p.x, p.y); x.rotate(p.a); x.fillStyle = p.c; x.fillRect(-p.r / 2, -p.r / 4, p.r, p.r / 2); x.restore(); });
+      if (t - t0 < 11000) requestAnimationFrame(loop); else x.clearRect(0, 0, c.width, c.height);
+    })(t0);
+  }
+})();
+</script>
+</body>
+</html>
