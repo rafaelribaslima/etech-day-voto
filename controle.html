@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#070a16">
+<title>ETECH Day · Controle da revelação</title>
+<link rel="icon" href="img/g1.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.status{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px}
+.status i{width:10px;height:10px;border-radius:50%;background:var(--err)}
+.status.on i{background:var(--ok);box-shadow:0 0 10px var(--ok)}
+#principal{font-size:19px;padding:22px}
+.linha{display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:center;padding:7px 0}
+.linha b{font-family:var(--mono);color:#7dd3fc}
+.linha strong{font-size:15px}
+.linha em{font-style:normal;font-family:var(--mono);color:var(--tx2)}
+.alerta{color:#fde68a;font-size:13px;margin-top:10px;line-height:1.5}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="top"><span class="pill"><i></i>SÓ PARA O PROFESSOR</span><span class="tag">CONTROLE DO TELÃO</span></div>
+  <h1 class="logo"><span class="grad">ETECH</span> Day</h1>
+
+  <section id="login" class="card" style="margin-top:28px">
+    <form id="lf">
+      <label class="field"><span>Código de acesso</span>
+        <input id="cod" autocomplete="off" autocapitalize="characters" placeholder="Código do professor" required></label>
+      <button class="btn" type="submit" style="margin-top:4px">Entrar</button>
+      <div class="msg" id="lmsg" role="alert"></div>
+    </form>
+  </section>
+
+  <section id="painel" class="hide">
+    <div class="sec">TELÃO</div>
+    <div class="card">
+      <div class="status" id="status"><i></i><span>Telão não aberto</span></div>
+      <button class="btn ghost" id="b-abrir" type="button">Abrir janela do telão</button>
+      <p class="note" style="margin-top:10px">Windows + P → <b>Estender</b>. Arraste a janela do telão para o projetor e dê <b>dois cliques</b> nela para tela cheia.</p>
+    </div>
+
+    <div class="sec">REVELAÇÃO <em id="agora">—</em></div>
+    <button class="btn" id="principal" type="button" disabled>Aguardando o telão</button>
+    <button class="btn ghost" id="b-reiniciar" type="button">Voltar ao início</button>
+    <p class="note" style="margin-top:8px">Também avança com espaço, Enter, seta → ou passador de slides.</p>
+
+    <div class="sec">PRÉVIA <em>NÃO PROJETE ESTA TELA</em></div>
+    <div class="card">
+      <div id="resumo" class="note">—</div>
+      <div id="ranking"></div>
+      <div class="alerta hide" id="aberta">A votação ainda está ABERTA. Encerre em <a href="resultado.html" target="_blank" style="color:inherit">resultado.html</a> antes de começar.</div>
+    </div>
+  </section>
+</main>
+
+<script src="equipes.js"></script>
+<script>
+(function(){
+  const E = window.ETECH, $ = (id) => document.getElementById(id);
+  const canal = new BroadcastChannel("etech-telao");
+  let codigo = null, estado = null, visto = 0, enviado = 0;
+  try { codigo = sessionStorage.getItem("etech_cod"); } catch(e) {}
+
+  async function entrar(c) {
+    try {
+      await E.chamar({ acao: "login", codigo: c });
+      codigo = c; try { sessionStorage.setItem("etech_cod", c); } catch(e) {}
+      $("login").classList.add("hide"); $("painel").classList.remove("hide");
+      previa(); setInterval(previa, 8000);
+    } catch (x) {
+      const m = $("lmsg"); m.className = "msg err";
+      m.textContent = x.code === "codigo" ? "Código incorreto." : "Sem conexão com o servidor. Tente de novo.";
+    }
+  }
+  $("lf").addEventListener("submit", (e) => { e.preventDefault(); entrar($("cod").value.trim().toUpperCase()); });
+  if (codigo) entrar(codigo);
+
+  async function previa() {
+    let d;
+    try {
+      d = await E.chamar({ acao: "resultado", codigo });
+    } catch (x) { $("resumo").textContent = "SEM CONEXÃO — TENTANDO DE NOVO"; return; }
+    $("resumo").textContent = d.total + " votos • atualizado " + new Date().toLocaleTimeString("pt-BR");
+    $("aberta").classList.toggle("hide", !d.aberta);
+    const notas = [...new Set(d.equipes.map((v) => v.votos).filter((n) => n > 0))].sort((a, b) => b - a).slice(0, 3);
+    const r = $("ranking"); r.innerHTML = "";
+    notas.forEach((n, i) => d.equipes.filter((v) => v.votos === n).forEach((v) => {
+      const l = document.createElement("div"); l.className = "linha";
+      l.innerHTML = "<b></b><strong></strong><em></em>";
+      l.querySelector("b").textContent = (i + 1) + "º";
+      l.querySelector("strong").textContent = E.equipes.find((t) => t.id === v.equipe).nome;
+      l.querySelector("em").textContent = v.votos;
+      r.appendChild(l);
+    }));
+  }
+
+  // o que o botão principal faz agora
+  function proximaAcao() {
+    if (!estado || Date.now() - visto > 2500) return { rotulo: "Aguardando o telão" };
+    if (!estado.logado) return { rotulo: "Conectando o telão…" };
+    if (estado.ocupado) return { rotulo: "Aguarde a animação…" };
+    if (estado.tela === "vazio") return { rotulo: "Ainda não há votos" };
+    if (estado.tela === "ready") return { rotulo: "Começar: mostrar total de votos", cmd: "comecar" };
+    if (!estado.proximo) return { rotulo: "Campeão revelado!" };
+    if (estado.indice === 0) return { rotulo: "Revelar os 3 mais votados", cmd: "avancar" };
+    return { rotulo: estado.proximo === 1 ? "Revelar o GRANDE CAMPEÃO" : "Revelar o " + estado.proximo + "º lugar", cmd: "avancar" };
+  }
+  const telas = { ready: "TELA DE ESPERA", total: "TOTAL DE VOTOS", suspense: "SUSPENSE", place: "COLOCADO NA TELA", counting: "CONTAGEM", result: "CAMPEÃO", vazio: "SEM VOTOS" };
+  function pintar() {
+    const ligado = estado && Date.now() - visto <= 2500;
+    $("status").className = "status" + (ligado ? " on" : "");
+    $("status").querySelector("span").textContent = ligado ? "Telão conectado" : "Telão não aberto";
+    $("agora").textContent = ligado ? "NO TELÃO: " + (telas[estado.tela] || "") : "—";
+    const a = proximaAcao();
+    $("principal").textContent = a.rotulo;
+    $("principal").disabled = !a.cmd;
+  }
+  canal.onmessage = (ev) => {
+    if (!ev.data || ev.data.tipo !== "estado") return;
+    estado = ev.data; visto = Date.now();
+    if (!estado.logado && codigo && Date.now() - enviado > 2000) { enviado = Date.now(); canal.postMessage({ cmd: "codigo", codigo }); }
+    pintar();
+  };
+  setInterval(pintar, 500);
+
+  function avancar() {
+    const a = proximaAcao(); if (!a.cmd) return;
+    estado.ocupado = true; pintar(); // evita comando repetido
+    canal.postMessage({ cmd: a.cmd });
+  }
+  $("principal").onclick = (e) => { e.currentTarget.blur(); avancar(); };
+  $("b-reiniciar").onclick = (e) => { e.currentTarget.blur(); if (confirm("Voltar o telão para a tela de espera?")) canal.postMessage({ cmd: "reiniciar" }); };
+  $("b-abrir").onclick = (e) => { e.currentTarget.blur(); window.open("vencedora.html?telao", "etech-telao", "popup,width=1100,height=700"); };
+  document.addEventListener("keydown", (e) => {
+    if ($("painel").classList.contains("hide") || ["INPUT", "BUTTON", "A"].includes(e.target.tagName)) return;
+    if ([" ", "Enter", "ArrowRight", "PageDown"].includes(e.key)) { e.preventDefault(); if (!e.repeat) avancar(); }
+  });
+})();
+</script>
+</body>
+</html>
