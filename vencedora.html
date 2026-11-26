@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#070a16">
+<title>ETECH Day · Equipe vencedora</title>
+<link rel="icon" href="img/g1.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+body{display:flex;flex-direction:column;overflow:hidden;height:100dvh}
+#stage{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3vh 5vw;cursor:pointer;user-select:none}
+#confetti{position:fixed;inset:0;z-index:5;pointer-events:none}
+.sh-logo{font-weight:800;font-size:min(10vw,14vh);letter-spacing:-.045em;line-height:1}
+.sh-logo .grad{background:linear-gradient(90deg,#fff 0 16%,#38bdf8 16%,#60a5fa 40%,#a78bfa 75%,#c084fc 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sh-sub{font-family:var(--mono);letter-spacing:.4em;font-size:min(2.2vw,3vh);color:#e5e9ff;margin-top:1.2vh}
+.ph{display:none;flex-direction:column;align-items:center;gap:2.4vh}
+.ph.on{display:flex}
+.big-btn{margin-top:3vh;font:inherit;font-weight:800;font-size:min(3vw,4vh);color:#fff;border:0;border-radius:18px;padding:2vh 3vw;cursor:pointer;background:linear-gradient(90deg,#2563eb,#7c3aed 60%,#a855f7);box-shadow:0 14px 50px -10px rgba(124,58,237,.9);animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.05)}}
+.count{font-weight:800;font-size:min(30vw,42vh);line-height:1;background:linear-gradient(180deg,#fff,#a78bfa);-webkit-background-clip:text;background-clip:text;color:transparent;animation:pop .9s ease-out}
+@keyframes pop{0%{transform:scale(.3);opacity:0}30%{opacity:1}100%{transform:scale(1.1);opacity:.9}}
+.congrats{font-family:var(--mono);font-weight:700;letter-spacing:.35em;font-size:min(2.6vw,3.6vh);color:#fde68a;text-shadow:0 0 30px rgba(250,204,21,.7);animation:fadeup .8s both}
+.parab{font-weight:800;font-size:min(8vw,12vh);line-height:1;letter-spacing:-.03em;background:linear-gradient(90deg,#fde68a,#f472b6,#a78bfa,#38bdf8);-webkit-background-clip:text;background-clip:text;color:transparent;animation:fadeup .8s .15s both}
+.winners{display:flex;gap:4vw;justify-content:center;flex-wrap:wrap;margin-top:1vh}
+.win{display:flex;flex-direction:column;align-items:center;gap:1.4vh;animation:zoom 1s .35s cubic-bezier(.2,1.5,.4,1) both}
+.win img{width:min(22vw,30vh);height:min(22vw,30vh);border-radius:22%;box-shadow:0 0 0 4px rgba(253,230,138,.9),0 0 90px 10px var(--acc),0 30px 80px -20px var(--acc);animation:float 3.2s ease-in-out infinite}
+.winners.many .win img{width:min(15vw,22vh);height:min(15vw,22vh)}
+.win small{font-family:var(--mono);letter-spacing:.2em;font-size:min(1.7vw,2.6vh);color:var(--tx2);text-transform:uppercase}
+.win strong{font-weight:800;font-size:min(6.5vw,10vh);letter-spacing:-.03em;line-height:1}
+.winners.many .win strong{font-size:min(4.2vw,7vh)}
+.votos{font-family:var(--mono);font-size:min(1.8vw,2.8vh);color:var(--tx2);letter-spacing:.12em;animation:fadeup .8s .9s both}
+.empate{font-family:var(--mono);letter-spacing:.3em;color:#e5e9ff;font-size:min(2vw,3vh);animation:fadeup .8s .2s both}
+@keyframes fadeup{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes zoom{from{opacity:0;transform:scale(.3) rotate(-8deg)}to{opacity:1;transform:none}}
+@keyframes float{50%{transform:translateY(-1.6vh)}}
+.hint{position:fixed;bottom:1.6vh;left:0;right:0;text-align:center;font-family:var(--mono);font-size:12px;color:var(--tx3);letter-spacing:.1em}
+.tools{position:fixed;top:14px;right:14px;z-index:6;display:flex;gap:8px}
+.tools button{font:inherit;font-size:13px;color:var(--tx2);background:rgba(255,255,255,.06);border:1px solid var(--line2);border-radius:10px;padding:8px 12px;cursor:pointer}
+.total-num{font-weight:800;font-size:min(30vw,36vh);line-height:1;font-variant-numeric:tabular-nums;background:linear-gradient(180deg,#fff,#a78bfa);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lugar{font-family:var(--mono);font-weight:700;letter-spacing:.3em;font-size:min(3.4vw,5vh);color:#7dd3fc;animation:fadeup .6s both}
+.win .qtd{font-family:var(--mono);font-weight:700;font-size:min(2.8vw,4.2vh);color:#e5e9ff;letter-spacing:.1em}
+.ph .win img{animation:float 3.2s ease-in-out infinite}
+#place .winners .win img{width:min(18vw,26vh);height:min(18vw,26vh);box-shadow:0 0 70px 0 var(--acc)}
+#place .winners.many .win img{width:min(13vw,19vh);height:min(13vw,19vh)}
+#total,#place,#result{margin-top:3vh}
+.aguarde{display:none;margin-top:6vh;font-weight:700;font-size:min(4vw,6vh);color:#e5e9ff;animation:pulse 2.4s ease-in-out infinite}
+body.telao .aguarde{display:block}
+body.telao #stage{cursor:none}
+body.telao #b-reveal,body.telao #ready .note,body.telao #login,body.telao .tools,body.telao .hint{display:none}
+#suspense{margin-top:8vh;gap:5vh}
+.suspense{font-weight:800;font-size:min(6vw,9vh);letter-spacing:-.02em;animation:fadeup .8s both}
+.pontos{display:flex;gap:2vw}
+.pontos i{width:min(2.4vw,3.4vh);height:min(2.4vw,3.4vh);border-radius:50%;background:#a78bfa;animation:bate 1.2s ease-in-out infinite}
+.pontos i:nth-child(2){animation-delay:.2s}.pontos i:nth-child(3){animation-delay:.4s}
+@keyframes bate{0%,100%{opacity:.2;transform:scale(.7)}40%{opacity:1;transform:scale(1.2)}}
+#login{width:min(92vw,420px);cursor:default;text-align:left}
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+<div class="tools hide" id="tools"><button id="b-again" type="button">Repetir</button><button id="b-fs" type="button">Tela cheia</button></div>
+
+<main id="stage">
+  <div class="sh-logo"><span class="grad">ETECH</span> Day</div>
+  <div class="sh-sub">EQUIPE MAIS VOTADA</div>
+
+  <section id="login" class="card ph on" style="margin-top:4vh;align-items:stretch">
+    <form id="lf">
+      <label class="field"><span>Código de acesso</span>
+        <input id="cod" autocomplete="off" autocapitalize="characters" placeholder="Código do professor" required></label>
+      <button class="btn" type="submit" style="margin-top:4px">Entrar</button>
+      <div class="msg" id="lmsg" role="alert"></div>
+    </form>
+  </section>
+
+  <section id="ready" class="ph">
+    <div class="aguarde">A revelação começa em instantes…</div>
+    <button class="big-btn" id="b-reveal" type="button">Começar a revelação</button>
+    <div class="note">Encerre a votação antes de revelar. Esta tela só lê o resultado.</div>
+  </section>
+
+  <section id="total" class="ph">
+    <div class="lugar">TOTAL DE VOTOS</div>
+    <div class="total-num" id="tnum">0</div>
+  </section>
+
+  <section id="place" class="ph" aria-live="polite">
+    <div class="lugar" id="plugar"></div>
+    <div class="winners" id="pwinners"></div>
+    <div class="empate hide" id="pempate">EMPATE!</div>
+  </section>
+
+  <section id="suspense" class="ph"><div class="suspense" id="stxt"></div><div class="pontos"><i></i><i></i><i></i></div></section>
+
+  <section id="counting" class="ph"><div class="count" id="num">5</div></section>
+
+  <section id="result" class="ph" aria-live="polite">
+    <div class="congrats">O GRANDE CAMPEÃO DA NOITE</div>
+    <div class="winners" id="winners"></div>
+    <div class="empate hide" id="empate">EMPATE!</div>
+    <div class="parab">PARABÉNS!</div>
+      </section>
+
+  <section id="vazio" class="ph"><div class="parab" style="font-size:min(5vw,8vh)">Ainda não há votos</div></section>
+  <div class="hint" id="hint"></div>
+</main>
+
+<script src="equipes.js"></script>
+<script>
+(function(){
+  const E = window.ETECH, $ = (id) => document.getElementById(id);
+  const telao = new URLSearchParams(location.search).has("telao"); // janela do projetor, comandada por controle.html
+  let codigo = null;
+  try { codigo = sessionStorage.getItem("etech_cod"); } catch(e) {}
+
+  function fase(id) { document.querySelectorAll(".ph").forEach((p) => p.classList.toggle("on", p.id === id)); }
+
+  async function entrar(c) {
+    try {
+      await E.chamar({ acao: "login", codigo: c });
+      codigo = c; try { sessionStorage.setItem("etech_cod", c); } catch(e) {}
+      fase("ready"); $("tools").classList.remove("hide"); $("hint").textContent = "CLIQUE NO BOTÃO PARA COMEÇAR";
+    } catch (x) {
+      const m = $("lmsg"); m.className = "msg err";
+      m.textContent = x.code === "codigo" ? "Código incorreto." : "Sem conexão com o servidor. Tente de novo.";
+    }
+  }
+  $("lf").addEventListener("submit", (e) => { e.preventDefault(); entrar($("cod").value.trim().toUpperCase()); });
+  if (codigo) entrar(codigo);
+  if (telao) { document.body.classList.add("telao"); fase("ready"); }
+
+  async function buscar() {
+    return E.chamar({ acao: "resultado", codigo });
+  }
+
+  // etapas: total → 3º → 2º → campeão (cada clique avança uma)
+  const PAUSA_TOP3 = 6000, PAUSA_SEGUNDO = 4000, PAUSA_CAMPEAO = 5000; // milissegundos
+  let etapas = [], etapa = 0, busy = false, rodada = 0;
+  const espera = (ms) => new Promise((r) => setTimeout(r, ms));
+  const dica = (t) => { $("hint").textContent = t; };
+  const votosTxt = (n) => n + (n === 1 ? " VOTO" : " VOTOS");
+  const proxima = () => { const e = etapas[etapa]; return !e ? "" : "CLIQUE OU APERTE ESPAÇO PARA REVELAR " + (etapa === 0 ? "OS 3 MAIS VOTADOS" : e.pos === 1 ? "O GRANDE CAMPEÃO" : "O " + e.pos + "º LUGAR"); };
+
+  function cartoes(el, grupo) {
+    el.innerHTML = ""; el.className = "winners" + (grupo.length > 1 ? " many" : "");
+    grupo.forEach((v) => {
+      const t = E.equipes.find((x) => x.id === v.equipe);
+      const b = document.createElement("div"); b.className = "win"; b.style.setProperty("--acc", t.cor);
+      const i = document.createElement("img"); i.src = "img/g" + t.id + ".webp"; i.alt = "";
+      const s = document.createElement("small"); s.textContent = t.area;
+      const n = document.createElement("strong"); n.textContent = t.nome;
+      const q = document.createElement("div"); q.className = "qtd"; q.textContent = votosTxt(v.votos);
+      b.append(i, s, n, q); el.appendChild(b);
+    });
+  }
+
+  async function comecar() {
+    if (busy) return; busy = true; const r = ++rodada;
+    let d;
+    try { d = await buscar(); } catch (x) { busy = false; dica("SEM CONEXÃO — TENTE DE NOVO"); return; }
+    // posições por quantidade de votos: empatados dividem o mesmo lugar
+    const notas = [...new Set(d.equipes.map((v) => v.votos).filter((n) => n > 0))].sort((a, b) => b - a).slice(0, 3);
+    if (!notas.length) { fase("vazio"); busy = false; return; }
+    etapas = notas.map((n, i) => ({ pos: i + 1, grupo: d.equipes.filter((v) => v.votos === n) })).reverse();
+    etapa = 0; fase("total"); dica("");
+    const t0 = performance.now();
+    await new Promise((ok) => (function sobe(t) {
+      const k = Math.min(1, Math.max(0, (t - t0) / 2200));
+      $("tnum").textContent = Math.round(d.total * (1 - Math.pow(1 - k, 3)));
+      if (k < 1 && r === rodada) requestAnimationFrame(sobe); else ok();
+    })(t0));
+    if (r !== rodada) return;
+    dica(proxima()); busy = false;
+  }
+
+  async function avancar() {
+    if (busy || etapa >= etapas.length) return; busy = true; const r = rodada;
+    const e = etapas[etapa]; dica("");
+    // a primeira revelação abre com a tela dos 3 mais votados
+    if (etapa === 0) {
+      $("stxt").textContent = "Chegou a hora dos 3 mais votados!";
+      fase("suspense"); await espera(PAUSA_TOP3); if (r !== rodada) return;
+    }
+    if (e.pos === 2 || (e.pos === 1 && etapa > 0)) {
+      $("stxt").textContent = e.pos === 1 ? "E o grande campeão é…" : "E em 2º lugar…";
+      fase("suspense"); await espera(e.pos === 1 ? PAUSA_CAMPEAO : PAUSA_SEGUNDO); if (r !== rodada) return;
+    }
+    if (e.pos === 1) {
+      for (let n = 5; n >= 1; n--) {
+        $("num").textContent = n; fase("counting");
+        const el = $("num"); el.style.animation = "none"; void el.offsetWidth; el.style.animation = "";
+        await espera(1000); if (r !== rodada) return;
+      }
+      cartoes($("winners"), e.grupo); $("empate").classList.toggle("hide", e.grupo.length < 2);
+      fase("result"); festa(); dica("PARABÉNS A TODAS AS EQUIPES DA ETECH DAY!");
+    } else {
+      $("plugar").textContent = e.pos + "º LUGAR";
+      cartoes($("pwinners"), e.grupo); $("pempate").classList.toggle("hide", e.grupo.length < 2);
+      fase("place"); await espera(900); if (r !== rodada) return;
+    }
+    etapa++; if (e.pos !== 1) dica(proxima());
+    busy = false;
+  }
+
+  function reiniciar() { rodada++; busy = false; parar = true; etapas = []; etapa = 0; fase("ready"); dica("CLIQUE NO BOTÃO PARA COMEÇAR"); }
+
+  $("b-reveal").onclick = (e) => { e.stopPropagation(); e.currentTarget.blur(); comecar(); };
+  $("b-again").onclick = (e) => { e.stopPropagation(); e.currentTarget.blur(); if (codigo) reiniciar(); };
+  $("b-fs").onclick = (e) => { e.stopPropagation(); e.currentTarget.blur(); if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen().catch(() => {}); };
+  $("stage").addEventListener("click", () => { if (!telao) avancar(); });
+  $("stage").addEventListener("dblclick", () => { if (telao) $("b-fs").click(); });
+  document.addEventListener("keydown", (e) => {
+    if (telao || e.target.tagName === "INPUT" || e.target.tagName === "BUTTON") return;
+    if ([" ", "Enter", "ArrowRight", "PageDown"].includes(e.key)) { e.preventDefault(); avancar(); }
+  });
+
+  // ---------- comunicação com o painel de controle (mesmo computador e navegador) ----------
+  if (telao && "BroadcastChannel" in window) {
+    const canal = new BroadcastChannel("etech-telao");
+    const avisar = () => canal.postMessage({
+      tipo: "estado", logado: !!codigo, ocupado: busy, tela: document.querySelector(".ph.on").id,
+      indice: etapa, proximo: etapas[etapa] ? etapas[etapa].pos : null, aviso: $("hint").textContent
+    });
+    canal.onmessage = async (ev) => {
+      const m = ev.data || {};
+      if (m.cmd === "codigo" && !codigo) await entrar(m.codigo);
+      else if (m.cmd === "comecar" && codigo && !etapas.length) comecar();
+      else if (m.cmd === "avancar") avancar();
+      else if (m.cmd === "reiniciar" && codigo) reiniciar();
+      avisar();
+    };
+    setInterval(avisar, 500);
+  }
+
+  // ---------- confete ----------
+  const cv = $("confetti"), cx = cv.getContext("2d");
+  let ps = [], parar = false, rodando = false;
+  const cores = ["#fde68a", "#38bdf8", "#60a5fa", "#a78bfa", "#c084fc", "#f472b6", "#34d399", "#fb923c", "#fff"];
+  function fit() { cv.width = innerWidth; cv.height = innerHeight; }
+  addEventListener("resize", fit); fit();
+  function canhao(x, ang, n) {
+    for (let i = 0; i < n; i++) {
+      const a = ang + (Math.random() - .5) * .9, v = 14 + Math.random() * 16;
+      ps.push({ x, y: cv.height * .95, vx: Math.cos(a) * v, vy: -Math.sin(a) * v, r: 6 + Math.random() * 8, a: Math.random() * 6, va: -.3 + Math.random() * .6, c: cores[(Math.random() * cores.length) | 0], circ: Math.random() < .25, vida: 0 });
+    }
+  }
+  function chuva(n) {
+    for (let i = 0; i < n; i++) ps.push({ x: Math.random() * cv.width, y: -20 - Math.random() * 200, vx: -1.5 + Math.random() * 3, vy: 2 + Math.random() * 3.5, r: 6 + Math.random() * 7, a: Math.random() * 6, va: -.2 + Math.random() * .4, c: cores[(Math.random() * cores.length) | 0], circ: Math.random() < .2, vida: 0 });
+  }
+  function festa() {
+    parar = false; ps = [];
+    const rajada = () => { canhao(cv.width * .04, 1.15, 90); canhao(cv.width * .96, Math.PI - 1.15, 90); };
+    rajada();
+    [700, 1500, 2600, 4000].forEach((t) => setTimeout(() => { if (!parar) rajada(); }, t));
+    const ate = performance.now() + 12000;
+    const chv = setInterval(() => { if (parar || performance.now() > ate) clearInterval(chv); else chuva(6); }, 160);
+    if (!rodando) { rodando = true; requestAnimationFrame(loop); }
+  }
+  function loop() {
+    cx.clearRect(0, 0, cv.width, cv.height);
+    ps.forEach((p) => {
+      p.vy += .32; p.vx *= .985; p.vy *= .985; p.x += p.vx; p.y += p.vy; p.a += p.va; p.vida++;
+      cx.save(); cx.translate(p.x, p.y); cx.rotate(p.a); cx.fillStyle = p.c;
+      if (p.circ) { cx.beginPath(); cx.arc(0, 0, p.r / 2.4, 0, 7); cx.fill(); } else cx.fillRect(-p.r / 2, -p.r / 4, p.r, p.r / 2);
+      cx.restore();
+    });
+    ps = ps.filter((p) => p.y < cv.height + 40);
+    if (parar && !ps.length) { rodando = false; cx.clearRect(0, 0, cv.width, cv.height); return; }
+    requestAnimationFrame(loop);
+  }
+})();
+</script>
+</body>
+</html>
